@@ -17,8 +17,8 @@ public class Main {
   private static final String PRINT_AST_TREE_COMMAND = "print";
   private static final String VARIABLE_UPDATE_PATTERN = "^[a-zA-Z_][a-zA-Z0-9_]*\\s*=.*";
   private static final String VARIABLE_NAME_PATTERN = "[a-zA-Z][a-zA-Z0-9]*";
+  private static final Scanner scanner = new Scanner(System.in);
 
-  private static Scanner scanner = new Scanner(System.in);
   private static boolean isRunning = true;
   private static Node root = null;
   private static Map<String, Integer> variableToValue = new HashMap<>();

@@ -2,13 +2,13 @@
 
 ## Build and Run
 
-1. **Compile the project:**
+1. **Build the project:**
    ```bash
    javac -d out src/Main.java src/Parser.java src/node/*.java
    cd out
    jar cfe ast-builder.jar Main *.class node/*.class
 
-2. **Compile the project:**
+2. **Run the project:**
  ```bash
    java -jar ast-builder.jar
 ```
