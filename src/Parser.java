@@ -1,3 +1,4 @@
+import node.InvalidInputException;
 import node.Node;
 import node.NumberNode;
 import node.OperationNode;
@@ -16,7 +17,7 @@ public class Parser {
   Node parse() {
     Node expr = parseExpression();
     if (position != input.length()) {
-      throw new RuntimeException("Некорректное выражение");
+      throw new InvalidInputException(String.format("Invalid input: %s", input));
     }
     return expr;
   }
@@ -46,7 +47,7 @@ public class Parser {
       next();
       Node node = parseExpression();
       if (peek() != ')') {
-        throw new RuntimeException("Ожидалась ')'");
+        throw new InvalidInputException("')' was expected");
       }
       next();
       return node;
@@ -73,7 +74,7 @@ public class Parser {
     }
     int number = Integer.parseInt(sb.toString());
     if (number > MAX_16_BIT_VALUE) {
-      throw new RuntimeException(String.format("Number must be less than 16 bits, number = %s", number));
+      throw new InvalidInputException(String.format("Number must be less than 16 bits, number = %s", number));
     }
     return number;
   }
