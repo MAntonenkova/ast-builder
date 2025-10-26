@@ -41,6 +41,8 @@ public class Main {
         calculateAndPrintResult();
       } catch (InvalidInputException ex) {
         System.out.println(ex.getMessage());
+      } catch (Exception ex) {
+        System.out.println("An error occurred. Please try again:" + ex.getMessage());
       }
     }
 
@@ -67,7 +69,7 @@ public class Main {
       } catch (InvalidInputException ex) {
         System.out.println(ex.getMessage());
       } catch (Exception ex) {
-        System.out.println("Unexpected error: " + ex.getMessage());
+        System.out.println("An error occurred. Please try again:" + ex.getMessage());
       }
     }
   }
