@@ -46,7 +46,7 @@ public class Parser {
     if (peek() == '(') {
       next();
       Node node = parseExpression();
-      if (peek() != ')') {
+      if (position >= input.length() || peek() != ')') {
         throw new InvalidInputException("')' was expected");
       }
       next();
@@ -61,7 +61,17 @@ public class Parser {
 
   private String parseVariable() {
     StringBuilder sb = new StringBuilder();
+    char firstChar = next();
+    if (!isLatinLetter(firstChar)) {
+      throw new InvalidInputException("Variable must start with a Latin letter. Found: " + firstChar);
+    }
+    sb.append(firstChar);
     while (position < input.length() && (Character.isLetterOrDigit(peek()))) {
+      char c = next();
+      if (!isLatinLetter(c) && !Character.isDigit(c)) {
+        throw new InvalidInputException(
+          "Invalid character '" + c + "' in variable name. Only Latin letters and numbers are allowed");
+      }
       sb.append(next());
     }
     return sb.toString();
@@ -85,5 +95,9 @@ public class Parser {
 
   char next() {
     return input.charAt(position++);
+  }
+
+  private boolean isLatinLetter(char c) {
+    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
   }
 }

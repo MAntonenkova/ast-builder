@@ -11,10 +11,11 @@ public class VariableNode extends Node {
   }
 
   public Integer calculate(Map<String, Integer> variables) {
-    if (variables.containsKey(name)) {
-      return variables.get(name);
+    if (!variables.containsKey(name)) {
+      throw new InvalidInputException(
+        "Variable not found: " + name);
     }
-    throw new RuntimeException("Variable not found: " + name);
+    return variables.get(name);
   }
 
   @Override

@@ -17,30 +17,35 @@ public class Main {
   private static final String PRINT_AST_TREE_COMMAND = "print";
   private static final String VARIABLE_UPDATE_PATTERN = "^[a-zA-Z_][a-zA-Z0-9_]*\\s*=.*";
   private static final String VARIABLE_NAME_PATTERN = "[a-zA-Z][a-zA-Z0-9]*";
+  private static final int MAX_RANDOM_VALUE = 100;
   private static final Scanner scanner = new Scanner(System.in);
-
   private static boolean isRunning = true;
+  private static boolean isValidException = false;
   private static Node root = null;
   private static Map<String, Integer> variableToValue = new HashMap<>();
 
   public static void main(String[] args) {
-    System.out.println("Please enter an expression (example: (12 + x) * 23 + y):");
-    String expression = scanner.nextLine();
-    try {
-      Set<String> variables = findVariables(expression);
-      variableToValue = setRandomValues(variables);
 
-      Parser parser = new Parser(expression);
-      root = parser.parse();
+    Integer result;
+    while (!isValidException) {
+      try {
+        System.out.println("Please enter an expression (example: (12 + x) * 23 + y):");
+        String expression = scanner.nextLine();
+        Set<String> variables = findVariables(expression);
+        variableToValue = setRandomValues(variables);
 
-      System.out.println("AST tree:");
-      root.printTree("");
+        Parser parser = new Parser(expression);
+        root = parser.parse();
+        isValidException = true;
 
-      int result = root.calculate(variableToValue);
-      printVariableValues();
-      System.out.println("Calculation result: " + result);
+        calculateAndPrintResult();
+      } catch (InvalidInputException ex) {
+        System.out.println(ex.getMessage());
+      }
+    }
 
-      while (isRunning) {
+    while (isRunning) {
+      try {
         System.out.println("Press \"calc\" to recalculate, \"print\" to build AST tree, \"exit\" to exit" //2
           + " or enter a new value for a variable (example: x=20)");
         String command = scanner.nextLine().trim();
@@ -59,10 +64,18 @@ public class Main {
         } else {
           System.out.println("Unknown command");
         }
+      } catch (InvalidInputException ex) {
+        System.out.println(ex.getMessage());
+      } catch (Exception ex) {
+        System.out.println("Unexpected error: " + ex.getMessage());
       }
-    } catch (InvalidInputException ex) {
-      System.out.println(ex.getMessage());
     }
+  }
+
+  private static void calculateAndPrintResult() {
+    int result = root.calculate(variableToValue);
+    printVariableValues();
+    System.out.println("Calculation result: " + result);
   }
 
   private static void updateVariableIfExists(String command) {
@@ -103,7 +116,7 @@ public class Main {
     Map<String, Integer> variableToValue = new HashMap<>();
     Random rand = new Random();
     for (String var : variables) {
-      int value = rand.nextInt(100) + 1;
+      int value = rand.nextInt(MAX_RANDOM_VALUE) + 1;
       variableToValue.put(var, value);
     }
     return variableToValue;
